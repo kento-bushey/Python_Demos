@@ -3,6 +3,7 @@ import simpleguitk as simplegui
 # Constants
 WIDTH = 500
 HEIGHT = 500
+SUB_UPDATES = 10000
 
 collisions = 0
 
@@ -22,19 +23,15 @@ class block():
         xoffset = boundary[0]
         yoffset = boundary[1]
         canvas.draw_polygon([[this.x-rad+xoffset,rad+yoffset-rad],[this.x-rad+xoffset,-rad+yoffset-rad],[this.x+rad+xoffset,-rad+yoffset-rad],[this.x+rad+xoffset,rad+yoffset-rad]],1,"white",rgb_to_hex(this.color))
-    def update(self): #obselete
+    def update(self):
         self.x += self.vel
 def check_collision(block1, block2):
     global collisions
     distance = block2.x - block1.x
     if distance <= (block1.side_length + block2.side_length) / 2:
-        # Collision occurred, now calculate the new velocities
         v1_final = ((block1.mass - block2.mass) * block1.vel + 2 * block2.mass * block2.vel) / (block1.mass + block2.mass)
         v2_final = ((block2.mass - block1.mass) * block2.vel + 2 * block1.mass * block1.vel) / (block1.mass + block2.mass)
-        #block1.vel = v1_final
-        #block2.vel = v2_final
         collisions+=1
-
         return [v1_final,v2_final]
     return [block1.vel,block2.vel]
 
@@ -64,7 +61,7 @@ def draw(canvas):
     drawArena(canvas)
     for block in block_list:
         block.draw_block(canvas)
-    sub_update(10000)
+    sub_update(SUB_UPDATES)
     canvas.draw_text("# of Collisions: "+str(collisions),[50,50],12,"white")
 
 # Create a frame and set up the event handlers
